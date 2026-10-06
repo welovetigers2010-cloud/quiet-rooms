@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Quiet Rooms · 五扇安静的拱门</title>
+<meta name="theme-color" content="#F5F1E6">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --paper:#F5F1E6; --ink:#3B3830; --ink2:#6E6A5C; --muted:#A39D8C;
+  --gold:#C9A961; --hair:rgba(59,56,48,.14);
+}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:-apple-system,'PingFang SC','HarmonyOS Sans SC','Noto Sans SC','Microsoft YaHei',sans-serif;line-height:1.8}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:98;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.75' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .04 0'/%3E%3C/filter%3E%3Crect width='150' height='150' filter='url(%23n)'/%3E%3C/svg%3E")}
+.serif{font-family:Georgia,'Noto Serif SC','Songti SC','SimSun',serif}
+button{font-family:inherit}
+
+/* ---------- 门厅 ---------- */
+#hall{min-height:100dvh;display:flex;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top) + 46px) 20px calc(env(safe-area-inset-bottom) + 30px);max-width:520px;margin:0 auto}
+.hall-top{text-align:center;margin-bottom:30px}
+.hall-top h1{font-family:Georgia,'Noto Serif SC',serif;font-size:2rem;letter-spacing:.12em;font-weight:600}
+.hall-top .en{font-family:Georgia,serif;font-style:italic;font-size:.82rem;color:var(--gold);letter-spacing:.28em;margin-top:4px}
+.hall-top p{font-size:.86rem;color:var(--ink2);margin-top:14px;letter-spacing:.1em}
+.hall-top .line{width:34px;height:1px;background:var(--gold);margin:18px auto 0;opacity:.6}
+
+#doors{width:100%;display:flex;flex-direction:column;gap:20px}
+.door{position:relative;border-radius:120px 120px 10px 10px;overflow:hidden;cursor:pointer;border:none;text-align:left;
+  box-shadow:0 14px 34px rgba(59,56,48,.16);transition:transform .35s,box-shadow .35s;display:block;width:100%;aspect-ratio:3/4.6;padding:0;background:#000}
+.door:active{transform:scale(.98)}
+.door img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.2s ease}
+.door:hover img{transform:scale(1.05)}
+.door::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,rgba(20,18,12,.55));pointer-events:none}
+.door .dlabel{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:16px 22px 18px;color:#FFF9EC;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.door .dlabel b{font-family:Georgia,'Noto Serif SC',serif;font-size:1.12rem;font-weight:600;letter-spacing:.16em}
+.door .dlabel i{font-family:Georgia,serif;font-style:italic;font-size:.72rem;letter-spacing:.2em;opacity:.85;white-space:nowrap}
+.hall-foot{margin-top:30px;text-align:center;font-size:.75rem;color:var(--muted);letter-spacing:.14em}
+.hall-foot b{display:block;font-family:Georgia,serif;font-size:1.05rem;color:var(--ink);letter-spacing:.06em;margin-top:2px}
+.hall-foot .stars{margin-top:8px;color:var(--gold);letter-spacing:.3em;font-size:.9rem}
+
+/* ---------- 房间（冥想中） ---------- */
+#room{position:fixed;inset:0;z-index:50;display:none;background:#111}
+#room.on{display:block}
+#room .rbg{position:absolute;inset:0;background-size:cover;background-position:center;filter:saturate(.92) brightness(.96)}
+#room .rvail{position:absolute;inset:0;background:radial-gradient(circle at 50% 42%,rgba(10,8,4,.05),rgba(10,8,4,.42));pointer-events:none}
+#room .rtop{position:absolute;top:calc(env(safe-area-inset-top) + 22px);left:0;right:0;text-align:center;color:#FFF9EC;z-index:3}
+#room .rtop .rname{font-family:Georgia,'Noto Serif SC',serif;font-size:1.05rem;letter-spacing:.3em;text-shadow:0 2px 12px rgba(0,0,0,.5)}
+#room .rtop .rsub{font-family:Georgia,serif;font-style:italic;font-size:.72rem;letter-spacing:.24em;opacity:.85;margin-top:4px}
+#stage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:3;color:#FFF9EC;text-align:center;padding:0 26px}
+#ballWrap{position:relative;width:min(64vw,240px);aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+#ball{width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 38% 32%,rgba(255,250,235,.5),rgba(255,244,214,.14) 60%,rgba(255,244,214,.04));border:1.5px solid rgba(255,248,230,.55);box-shadow:0 0 60px rgba(255,240,200,.22),inset 0 0 40px rgba(255,240,200,.12);transition:transform 4s cubic-bezier(.4,0,.4,1);display:grid;place-items:center}
+#bTxt{font-family:Georgia,serif;font-size:.95rem;letter-spacing:.34em;color:rgba(255,249,236,.92);text-shadow:0 1px 10px rgba(0,0,0,.4);padding-left:.34em}
+#cue{margin-top:34px;font-size:.85rem;letter-spacing:.16em;color:rgba(255,249,236,.88);min-height:1.6em;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+#clock{margin-top:8px;font-family:Georgia,serif;font-style:italic;font-size:2rem;letter-spacing:.1em;color:rgba(255,249,236,.95);text-shadow:0 2px 14px rgba(0,0,0,.45)}
+#rControls{margin-top:38px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;z-index:3}
+#rControls button{background:rgba(255,248,230,.14);border:1px solid rgba(255,248,230,.5);color:#FFF9EC;border-radius:999px;padding:10px 26px;font-size:.82rem;letter-spacing:.22em;cursor:pointer;backdrop-filter:blur(6px);transition:background .3s}
+#rControls button:hover{background:rgba(255,248,230,.24)}
+#durRow{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 26px);left:0;right:0;display:flex;justify-content:center;gap:10px;z-index:3}
+#durRow button{background:none;border:1px solid rgba(255,248,230,.4);color:rgba(255,249,236,.85);border-radius:999px;padding:7px 18px;font-size:.78rem;letter-spacing:.18em;cursor:pointer;backdrop-filter:blur(4px)}
+#durRow button.on{background:rgba(255,248,230,.9);color:#3B3830;border-color:transparent;font-weight:600}
+#leave{position:absolute;top:calc(env(safe-area-inset-top) + 18px);right:16px;z-index:4;background:none;border:none;color:rgba(255,249,236,.85);font-size:1.5rem;line-height:1;cursor:pointer;padding:8px;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+
+/* ---------- 完成层 ---------- */
+#done{position:fixed;inset:0;z-index:60;background:rgba(16,14,9,.82);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;flex-direction:column;color:#FFF9EC;text-align:center;padding:30px}
+#done.on{display:flex}
+#done .dball{width:64px;height:64px;border-radius:50%;border:1.5px solid rgba(255,248,230,.7);display:grid;place-items:center;font-size:1.4rem;margin-bottom:22px;box-shadow:0 0 40px rgba(255,240,200,.25)}
+#done h2{font-family:Georgia,'Noto Serif SC',serif;font-size:1.3rem;letter-spacing:.2em;font-weight:600}
+#done p{margin-top:10px;font-size:.85rem;color:rgba(255,249,236,.8);letter-spacing:.1em;max-width:300px}
+#done .dmin{font-family:Georgia,serif;font-style:italic;font-size:.95rem;color:var(--gold);margin-top:14px;letter-spacing:.16em}
+#done button{margin-top:30px;background:rgba(255,248,230,.16);border:1px solid rgba(255,248,230,.55);color:#FFF9EC;border-radius:999px;padding:11px 34px;font-size:.82rem;letter-spacing:.24em;cursor:pointer}
+
+#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 90px);transform:translateX(-50%) translateY(8px);z-index:99;background:rgba(43,40,32,.92);color:#FFF9EC;font-size:.78rem;letter-spacing:.14em;padding:10px 22px;border-radius:999px;opacity:0;pointer-events:none;transition:all .4s;max-width:86vw;text-align:center}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div id="hall">
+  <div class="hall-top">
+    <h1>五间房</h1>
+    <div class="en">QUIET ROOMS</div>
+    <div class="line"></div>
+    <p>把今天放在门外。<br>选一扇门，进去坐一会儿。</p>
+  </div>
+
+  <div id="doors">
+    <button class="door" data-r="1"><img src="images/room1.jpg" alt="蓝色的房间"><span class="dlabel"><b>蓝色的房间</b><i>BREATHE · 平静下来</i></span></button>
+    <button class="door" data-r="2"><img src="images/room2.jpg" alt="柠檬与海"><span class="dlabel"><b>柠檬与海</b><i>FOCUS · 专注此刻</i></span></button>
+    <button class="door" data-r="3"><img src="images/room3.jpg" alt="薰衣草的房间"><span class="dlabel"><b>薰衣草的房间</b><i>SLEEP · 慢慢入睡</i></span></button>
+    <button class="door" data-r="4"><img src="images/room4.jpg" alt="红色的花园"><span class="dlabel"><b>红色的花园</b><i>MORNING · 醒来问好</i></span></button>
+    <button class="door" data-r="5"><img src="images/room5.jpg" alt="绿色的温室"><span class="dlabel"><b>绿色的温室</b><i>BODY · 身体扫描</i></span></button>
+  </div>
+
+  <div class="hall-foot">
+    你在这里坐过 <b id="streak">0</b> 次
+    <div class="stars" id="starRow"></div>
+  </div>
+</div>
+
+<div id="room">
+  <div class="rbg" id="rbg"></div>
+  <div class="rvail"></div>
+  <button id="leave" title="离开房间">✕</button>
+  <div class="rtop">
+    <div class="rname" id="rName"></div>
+    <div class="rsub" id="rSub"></div>
+  </div>
+  <div id="stage">
+    <div id="ballWrap"><div id="ball"><span id="bTxt">吸</span></div></div>
+    <div id="cue">把注意力放在呼吸上</div>
+    <div id="clock">3:00</div>
+    <div id="rControls">
+      <button id="rGo">开始</button>
+    </div>
+  </div>
+  <div id="durRow">
+    <button data-m="1">1 分钟</button>
+    <button data-m="3" class="on">3 分钟</button>
+    <button data-m="5">5 分钟</button>
+  </div>
+</div>
+
+<div id="done">
+  <div class="dball">✦</div>
+  <h2>坐完了</h2>
+  <p id="doneMsg"></p>
+  <div class="dmin" id="doneMin"></div>
+  <button id="doneBack">轻轻回到门厅</button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),2600)}
+
+/* ============ 五间房档案 ============ */
+const ROOMS={
+ 1:{name:"蓝色的房间",sub:"BREATHE — 平静下来",cue:"4 拍吸气，4 拍呼气。像楼梯，一级一级。",
+    done:"蓝色房间把呼吸还给了你。",fx:196,cueArr:["只管呼吸，别的都不用做","肩膀松下来，下颌松下来","念头来了，让它像云一样过去"]},
+ 2:{name:"柠檬与海",sub:"FOCUS — 专注此刻",cue:"目光落在一点上，呼吸落在一点上。",
+    done:"专注是一扇门，你刚才推开过它。",fx:220,cueArr:["眼睛微闭，剩下的交给耳朵","每次走神，轻轻拽回来就好","海在响，你在听，这就够了"]},
+ 3:{name:"薰衣草的房间",sub:"SLEEP — 慢慢入睡",cue:"呼气比吸气长一点点，身体会变重。",
+    done:"房间把「困」还给你了，接住它。",fx:174,cueArr:["从眉毛开始放松，一路到脚","今天已经结束了，一件都不用再想","呼吸慢下来，梦就近了"]},
+ 4:{name:"红色的花园",sub:"MORNING — 醒来问好",cue:"谢谢身体，它陪了你一整夜。",
+    done:"花园的门开着，今天随你散步。",fx:262,cueArr:["想一件今天期待的小事","吸进来的光，呼出去的困","对今天的自己说一句早安"]},
+ 5:{name:"绿色的温室",sub:"BODY — 身体扫描",cue:"从头顶到脚底，一寸一寸路过身体。",
+    done:"你把自己的身体认真路过了一遍。",fx:233,cueArr:["头顶——放松","肩膀、手肘、指尖——放松","最后是脚底，它们撑了你一整天"]},
+};
+
+/* ============ 门厅 → 房间 ============ */
+let cur=null,min=3,running=false,phase=0,timers={cycle:null,clock:null,endT:null};
+function streak(){const s=JSON.parse(localStorage.getItem("qr_streak")||"[]");$("#streak").textContent=s.length;
+  $("#starRow").textContent=s.length?"✦".repeat(Math.min(10,s.length))+(s.length>10?" +"+(s.length-10):""):"还没坐过 —— 从一扇门开始"}
+streak();
+
+$$(".door").forEach(d=>d.addEventListener("click",()=>{
+  cur=+d.dataset.r;const R=ROOMS[cur];
+  $("#rbg").style.backgroundImage=`url(images/room${cur}.jpg)`;
+  $("#rName").textContent=R.name;$("#rSub").textContent=R.sub;
+  $("#cue").textContent=R.cue;$("#clock").textContent=fmt(min*60);
+  $("#room").classList.add("on");document.body.style.overflow="hidden";
+}));
+$("#leave").addEventListener("click",leaveRoom);
+function leaveRoom(){pauseAll();$("#room").classList.remove("on");document.body.style.overflow="";}
+
+/* ---------- 时长 ---------- */
+$$("#durRow button").forEach(b=>b.addEventListener("click",()=>{
+  if(running)return toast("先坐完这一轮 —— 或者点 ✕ 离开");
+  $$("#durRow button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+  min=+b.dataset.m;$("#clock").textContent=fmt(min*60);
+}));
+
+/* ---------- 呼吸循环 ---------- */
+function cycle(){
+  const R=ROOMS[cur];const ball=$("#ball"),txt=$("#bTxt");
+  let up=true;
+  ball.style.transform="scale(1.28)";txt.textContent="吸 —— 气";
+  $("#cue").textContent=R.cueArr[Math.min(phase,R.cueArr.length-1)];phase++;
+  timers.cycle=setInterval(()=>{
+    up=!up;
+    ball.style.transform=up?"scale(1.28)":"scale(1)";
+    txt.textContent=up?"吸 —— 气":"呼 —— 气";
+  },4000);
+}
+function fmt(s){return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
+function pauseAll(){clearInterval(timers.cycle);clearInterval(timers.clock);clearTimeout(timers.endT);running=false;$("#ball").style.transform="scale(1)";$("#bTxt").textContent="吸"}
+function chime(){
+  try{const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    [[523.25,0],[659.25,.18],[783.99,.36]].forEach(([f,d])=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type="sine";o.frequency.value=f;o.connect(g);g.connect(ctx.destination);
+      g.gain.setValueAtTime(0,ctx.currentTime+d);
+      g.gain.linearRampToValueAtTime(.16,ctx.currentTime+d+.04);
+      g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+d+2.4);
+      o.start(ctx.currentTime+d);o.stop(ctx.currentTime+d+2.5);
+    });
+  }catch(e){}
+}
+
+/* ---------- 开始 / 结束 ---------- */
+$("#rGo").addEventListener("click",()=>{
+  if(running){ // 暂停/继续
+    pauseAll();$("#rGo").textContent="继续坐";$("#cue").textContent="随时可以继续";
+    return;
+  }
+  running=true;phase=0;$("#rGo").textContent="暂停";
+  cycle();
+  let left=min*60;
+  timers.clock=setInterval(()=>{left--;$("#clock").textContent=fmt(left);
+    if(left<=0)finish();},1000);
+  timers.endT=setTimeout(finish,min*60*1000+1500);
+});
+function finish(){
+  pauseAll();chime();
+  const s=JSON.parse(localStorage.getItem("qr_streak")||"[]");
+  s.push({r:cur,m:min,at:Date.now()});
+  localStorage.setItem("qr_streak",JSON.stringify(s));
+  $("#doneMin").textContent=ROOMS[cur].name+" · "+min+" 分钟";
+  const R=ROOMS[cur];
+  $("#doneMsg").textContent=R.done;
+  $("#done").classList.add("on");
+  streak();
+  setTimeout(()=>{$("#room").classList.remove("on");document.body.style.overflow=""},600);
+}
+$("#doneBack").addEventListener("click",()=>$("#done").classList.remove("on"));
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){if($("#done").classList.contains("on"))$("#done").classList.remove("on");else leaveRoom()}});
+</script>
+</body>
+</html>
